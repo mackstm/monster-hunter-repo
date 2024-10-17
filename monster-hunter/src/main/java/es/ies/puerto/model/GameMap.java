@@ -134,22 +134,20 @@ public class GameMap {
 
         String[] position = hunter.getPosition().split(",");
         switch (map[x][y]) {
-            case "*":
+            case "*" -> {
                 map[x][y] = "H";
                 map[Integer.parseInt(position[0])][Integer.parseInt(position[1])] = "*";
                 hunter.setPosition(x + "," + y);
-                break;
+            }
         
-            case "M":
+            case "M" -> {
                 huntMonster(monsters, hunter);
                 map[x][y] = "H";
                 map[Integer.parseInt(position[0])][Integer.parseInt(position[1])] = "*";
                 hunter.setPosition(x + ","+ y);
-                break;
+            }
             
-            case "H":
-                moveHunter(hunter);
-                break;
+            case "H" -> moveHunter(hunter);
         }
     }
 

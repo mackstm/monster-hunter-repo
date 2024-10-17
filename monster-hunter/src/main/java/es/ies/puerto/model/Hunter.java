@@ -13,7 +13,7 @@ public class Hunter extends Thread{
     private String hunterName;
     private String position;
     private GameMap gameMap;
-    private static final long TIME_REMAINING = 20000;
+    private static final long TIME_REMAINING = 15000;
     
     /**
      * Default constructor
@@ -90,10 +90,8 @@ public class Hunter extends Thread{
 
             long endTime = System.currentTimeMillis();
             timePassed = (endTime - initialTime);
-
-            if (timePassed >= TIME_REMAINING){
-                System.out.println("Time is up!");
-                System.out.println(hunterName + " caught " + monsterCaught + " monsters");
+            
+            if (gameMap.getMonsters().isEmpty()) {
                 isOver = true;
             }
 
@@ -113,6 +111,9 @@ public class Hunter extends Thread{
             } catch (InterruptedException e) {
                 System.out.println(hunterName + " interrupted");
             }
+        }
+        if (timePassed >= TIME_REMAINING || gameMap.getMonsters().isEmpty()){
+            System.out.println(hunterName + " caught " + monsterCaught + " monsters");
         }
     }
 
