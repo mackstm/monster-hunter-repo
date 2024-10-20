@@ -127,10 +127,12 @@ public class GameMap {
         return !areas.containsValue(position);
     }
 
-    public synchronized void moveHunter(Hunter hunter) {
+    public synchronized boolean moveHunter(Hunter hunter) {
         Random random = new Random();
         int x = random.nextInt(size);
         int y = random.nextInt(size);
+
+        int hunted = random.nextInt(10);
 
         String[] position = hunter.getPosition().split(",");
         switch (map[x][y]) {
@@ -138,17 +140,24 @@ public class GameMap {
                 map[x][y] = "H";
                 map[Integer.parseInt(position[0])][Integer.parseInt(position[1])] = "*";
                 hunter.setPosition(x + "," + y);
+                return true;
             }
         
             case "M" -> {
-                huntMonster(monsters, hunter);
-                map[x][y] = "H";
-                map[Integer.parseInt(position[0])][Integer.parseInt(position[1])] = "*";
-                hunter.setPosition(x + ","+ y);
+                if (hunted <= 7) {
+                    huntMonster(monsters, hunter);
+                    map[x][y] = "H";
+                    map[Integer.parseInt(position[0])][Integer.parseInt(position[1])] = "*";
+                    hunter.setPosition(x + ","+ y);
+                    return true;
+                } else {
+                    return false;
+                }
             }
             
             case "H" -> moveHunter(hunter);
         }
+        return true;
     }
 
     public synchronized void addMonster(Monster monster) {
