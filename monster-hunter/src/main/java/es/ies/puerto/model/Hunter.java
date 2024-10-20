@@ -96,8 +96,8 @@ public class Hunter extends Thread{
             }
 
             for (Monster monster : gameMap.getMonsters()) {
-                if (monster.getPosition().equals(this.getPosition()) && !monster.isCaptured()) {
-                    monster.setCaptured(true);
+                if (monster.getPosition().equals(this.getPosition()) && !monster.isHunted()) {
+                    monster.setHunted(true);
                     System.out.println(this.getHunterName() + " caught " + monster.getMonsterName());
                     gameMap.removeMonster(monster);
                     gameMap.getMonsters().remove(monster);
@@ -121,10 +121,11 @@ public class Hunter extends Thread{
         for (int i = 0; i < this.gameMap.getSize(); i++) {
             for (int j = 0; j < this.gameMap.getSize(); j++) {
                 System.out.print(this.gameMap.getMap()[i][j]);
+                System.out.print(" ");
             }
-            System.out.println(" ");
+            System.out.println();
         }
-        System.out.println(" ");
+        System.out.println();
     }
 
     @Override

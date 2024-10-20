@@ -61,8 +61,8 @@ public class GameMap {
         return areas;
     }
 
-    public void setAreas(ConcurrentHashMap<String, String> locations) {
-        this.areas = locations;
+    public void setAreas(ConcurrentHashMap<String, String> areas) {
+        this.areas = areas;
     }
 
     public String[][] getMap() {
@@ -110,16 +110,16 @@ public class GameMap {
     }
 
     public synchronized void addHunter(Hunter hunter) {
-        String location = hunter.getPosition();
-        if(overlap(location)) {
+        String area = hunter.getPosition();
+        if(overlap(area)) {
             hunters.add(hunter);
-            String[] positions = location.split(",");
+            String[] positions = area.split(",");
             int row = Integer.parseInt(positions[0]);
             int col = Integer.parseInt(positions[1]);
 
             map[row][col] = "H";
 
-            areas.put(hunter.getHunterName(), location);
+            areas.put(hunter.getHunterName(), area);
         }
     }
 
@@ -152,21 +152,20 @@ public class GameMap {
     }
 
     public synchronized void addMonster(Monster monster) {
-        String location = monster.getPosition();
-        if(overlap(location)) {
+        String area = monster.getPosition();
+        if(overlap(area)) {
             monsters.add(monster);
-            String[] positions = location.split(",");
+            String[] positions = area.split(",");
             int row = Integer.parseInt(positions[0]);
             int col = Integer.parseInt(positions[1]);
 
             map[row][col] = "M";
 
-            areas.put(String.valueOf(monster.getId()) + ": " + monster.getMonsterName(), location);
+            areas.put(String.valueOf(monster.getId()) + ": " + monster.getMonsterName(), area);
         }
     }
 
     public synchronized void removeMonster(Monster monster) {
-        String location = monster.getPosition();
         areas.remove(String.valueOf(monster.getId()) + ": " + monster.getMonsterName());
         monsters.remove(monster);
     }
@@ -174,7 +173,7 @@ public class GameMap {
     public synchronized void huntMonster(List<Monster> monsters, Hunter hunter) {
         for (Monster monster : monsters) {
             if (hunter.getPosition().equals(monster.getPosition())) {
-                monster.setCaptured(true);
+                monster.setHunted(true);
                 removeMonster(monster);
                 monsters.remove(monster);
                 return;
@@ -182,29 +181,4 @@ public class GameMap {
         }
     }
 
-
-
-    @Override
-    public String toString() {
-        String drawnMap = "";
-        for (int i = 0; i < size; i++) {
-            for (int j = 0; j < size; j++) {
-                switch (map[i][j]) {
-                    case "H":
-                        drawnMap += "H";
-                        break;
-                    case "M":
-                        drawnMap += "M";
-                        break;
-                    default:
-                        drawnMap += "*";
-                        break;
-                }
-            }
-            drawnMap += "\n";
-        }
-        return drawnMap;
-    }
-
-    
 }

@@ -1,7 +1,5 @@
 package es.ies.puerto.model;
 
-import java.util.Objects;
-
 /**
  * Class that represents monster
  * @author Jose Maximiliano Boada Martin <maxibapl@gmail.com>
@@ -14,14 +12,14 @@ public class Monster {
     private int id;
     private String monsterName;
     private String position;
-    private boolean captured;
+    private boolean hunted;
 
     /**
      * Default constructor
      */
     public Monster() {
         position = "";
-        captured = false;
+        hunted = false;
     }
 
     /**
@@ -33,7 +31,7 @@ public class Monster {
         this.id = id;
         this.monsterName = monsterName;
         position = "";
-        captured = false;
+        hunted = false;
     }
 
     /**
@@ -63,18 +61,18 @@ public class Monster {
         this.position = position;
     }
 
-    public boolean isCaptured() {
-        return captured;
+    public boolean isHunted() {
+        return hunted;
     }
 
-    public void setCaptured(boolean captured) {
-        this.captured = captured;
+    public void setHunted(boolean captured) {
+        this.hunted = captured;
     }
 
     @Override
     public String toString() {
         return "Monster [id=" + id + ", monsterName=" + monsterName + ", position=" + position + ", captured="
-                + captured + "]";
+                + hunted + "]";
     }
 
     @Override

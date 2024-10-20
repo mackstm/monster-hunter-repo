@@ -10,14 +10,14 @@ import es.ies.puerto.model.Hunter;
 import es.ies.puerto.model.Monster;
 
 public class RunHunt {
-     GameMap gameMap;
+    GameMap gameMap;
     List<Monster> monsterList;
     List<Hunter> hunterList;
 
     public RunHunt() {
         gameMap = new GameMap();
         monsterList = new CopyOnWriteArrayList<>();
-        hunterList = new ArrayList<>();
+        hunterList = new CopyOnWriteArrayList<>();
     }
 
 
