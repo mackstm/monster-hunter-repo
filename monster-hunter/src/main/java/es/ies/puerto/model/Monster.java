@@ -76,28 +76,20 @@ public class Monster extends Thread {
 
     @Override
     public void run() {
-
+        long initialTime = System.currentTimeMillis();
+        long timePassed = 0;
         gameMap.addMonster(this);
 
-        while (!hunted) {
+        while (!hunted && timePassed < GameMap.TIME_REMAINING) {
             Random random = new Random();
             int randomTime = random.nextInt(1000) + 1;
-            boolean result = false;
-            for (Hunter hunter : gameMap.getHunters()) {
-                if (hunter.getPosition().equals(this.getPosition())) {
-                    result = gameMap.huntMonster(hunter);
-                }
-            }
-
-            if (result) {
-                hunted = true;
-            }
-
+            
             if (!hunted) {
                 gameMap.moveMonster(this);
-            } else {
-                break;
-            }            
+            }         
+
+            long endTime = System.currentTimeMillis();
+            timePassed = (endTime - initialTime);
 
             try {
                 Thread.sleep(randomTime);

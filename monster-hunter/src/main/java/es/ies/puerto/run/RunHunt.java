@@ -52,7 +52,7 @@ public class RunHunt {
     public static void main(String[] args) {
         
 
-        GameMap gameMap = new GameMap(5);
+        GameMap gameMap = new GameMap();
         Hunter hunter1 = new Hunter("Max", gameMap);
         Hunter hunter2 = new Hunter("Pepe", gameMap);
         Monster monster1 = new Monster(1, "Rathalos", gameMap);
