@@ -82,7 +82,7 @@ public class Monster extends Thread {
 
         while (!hunted && timePassed < GameMap.TIME_REMAINING) {
             Random random = new Random();
-            int randomTime = random.nextInt(1000) + 1;
+            int randomTime = random.nextInt(1500) + 501;
             
             if (!hunted) {
                 gameMap.moveMonster(this);

@@ -52,9 +52,9 @@ public class RunHunt {
     public static void main(String[] args) {
         
 
-        GameMap gameMap = new GameMap();
+        GameMap gameMap = new GameMap(5);
         Hunter hunter1 = new Hunter("Max", gameMap);
-        Hunter hunter2 = new Hunter("Pepe", gameMap);
+        Hunter hunter2 = new Hunter("Pedro", gameMap);
         Monster monster1 = new Monster(1, "Rathalos", gameMap);
         Monster monster2 = new Monster(2, "Rathian", gameMap);
 
@@ -67,6 +67,8 @@ public class RunHunt {
         monsterHunterGame.setMonsterList(monsterList);
 
         createLocations(monsterHunterGame);
+
+        gameMap.generateEvents(3);
 
         for (Hunter hunter : hunterList) {
             monsterHunterGame.getGameMap().addHunter(hunter);
@@ -87,15 +89,15 @@ public class RunHunt {
         monster1Thread.start();
         monster2Thread.start();
 
-        try {
-            hunter1Thread.join();
-            hunter2Thread.join();
+        // try {
+        //     hunter1Thread.join();
+        //     hunter2Thread.join();
 
-            monster1Thread.join();
-            monster2Thread.join();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        //     monster1Thread.join();
+        //     monster2Thread.join();
+        // } catch (InterruptedException e) {
+        //     e.printStackTrace();
+        // }
         
     }
 

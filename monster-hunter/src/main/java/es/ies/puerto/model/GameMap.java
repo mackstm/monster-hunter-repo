@@ -120,7 +120,7 @@ public class GameMap {
         for (int i = 0; i < amount; i++) {
             int x = random.nextInt(size);
             int y = random.nextInt(size);
-            map[x][y] = types[random.nextInt(2)];
+            map[x][y] = types[0];
         }
     }
 
@@ -153,7 +153,7 @@ public class GameMap {
         return !areas.containsValue(position);
     }
 
-    public synchronized boolean moveHunter(Hunter hunter) {
+    public synchronized int moveHunter(Hunter hunter) {
         Random random = new Random();
         int x = random.nextInt(size);
         int y = random.nextInt(size);
@@ -166,7 +166,6 @@ public class GameMap {
                 map[x][y] = "H";
                 map[Integer.parseInt(position[0])][Integer.parseInt(position[1])] = "*";
                 hunter.setPosition(x + "," + y);
-                return true;
             }
         
             case "M" -> {
@@ -175,23 +174,25 @@ public class GameMap {
                     map[x][y] = "H";
                     map[Integer.parseInt(position[0])][Integer.parseInt(position[1])] = "*";
                     hunter.setPosition(x + ","+ y);
-                    return true;
                 } else {
-                    return false;
+                    return 1;
                 }
             }
             
             case "H" -> moveHunter(hunter);
 
             case "T" -> {
-                
+                hunters.remove(hunter);
+                map[x][y] = "*";
+                map[Integer.parseInt(position[0])][Integer.parseInt(position[1])] = "*";
+                return -1;
             }
 
             case "S" -> {
                 successChance++;
             }
         }
-        return true;
+        return 0;
     }
 
     public synchronized void addMonster(Monster monster) {
@@ -213,7 +214,7 @@ public class GameMap {
         monsters.remove(monster);
     }
 
-    public synchronized boolean moveMonster(Monster monster) {
+    public synchronized int moveMonster(Monster monster) {
         Random random = new Random();
         int x = random.nextInt(size);
         int y = random.nextInt(size);
@@ -224,17 +225,25 @@ public class GameMap {
                 map[x][y] = "M";
                 map[Integer.parseInt(position[0])][Integer.parseInt(position[1])] = "*";
                 monster.setPosition(x + "," + y);
-                return true;
             }
         
             case "M" -> moveMonster(monster);
             
             case "H" -> {
                 moveMonster(monster);
-                return false;
+                return 1;
             }
+
+            case "T" -> {
+                monsters.remove(monster);
+                map[x][y] = "*";
+                map[Integer.parseInt(position[0])][Integer.parseInt(position[1])] = "*";
+                return -1;
+            }
+
+            default -> moveMonster(monster);
         }
-        return true;
+        return 0;
     }
 
     public synchronized boolean huntMonster(Hunter hunter) {

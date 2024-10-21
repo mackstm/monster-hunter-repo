@@ -78,22 +78,31 @@ public class Hunter extends Thread{
 
         int monsterCaught = 0;
         boolean isOver = false;
+        int movement = 0;
 
         gameMap.addHunter(this);
 
-        while (!isOver && !gameMap.getMonsters().isEmpty() && timePassed < GameMap.TIME_REMAINING) {
+        while (!isOver && !gameMap.getMonsters().isEmpty() && timePassed < GameMap.TIME_REMAINING && movement != -1) {
             gameMap.showMap();
             Random random = new Random();
-            int randomTime = random.nextInt(1000) + 1;
-            while (!gameMap.moveHunter(this)) {
+            int randomTime = random.nextInt(1500) + 501;
+            movement = gameMap.moveHunter(this);
+            while (movement == 1) {
                 System.out.println(hunterName + " has failed a hunt");
             }
+
+
 
             long endTime = System.currentTimeMillis();
             timePassed = (endTime - initialTime);
             
             if (gameMap.getMonsters().isEmpty()) {
                 isOver = true;
+            }
+
+            if (movement == -1) {
+                System.out.println(hunterName + " died in a trap!");
+                break;
             }
 
             for (Monster monster : gameMap.getMonsters()) {
