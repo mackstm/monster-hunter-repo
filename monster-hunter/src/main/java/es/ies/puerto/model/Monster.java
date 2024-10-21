@@ -78,15 +78,21 @@ public class Monster extends Thread {
     public void run() {
         long initialTime = System.currentTimeMillis();
         long timePassed = 0;
+        int movement = 0;
         gameMap.addMonster(this);
 
-        while (!hunted && timePassed < GameMap.TIME_REMAINING) {
+        while (!hunted && timePassed < GameMap.TIME_REMAINING && movement != -1) {
             Random random = new Random();
             int randomTime = random.nextInt(1500) + 501;
-            
+        
             if (!hunted) {
-                gameMap.moveMonster(this);
-            }         
+                movement = gameMap.moveMonster(this);
+            }
+
+            if (movement == -1) {
+                System.out.println(monsterName + " died in a trap!");
+                break;
+            }
 
             long endTime = System.currentTimeMillis();
             timePassed = (endTime - initialTime);

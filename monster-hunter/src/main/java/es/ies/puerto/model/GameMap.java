@@ -120,7 +120,7 @@ public class GameMap {
         for (int i = 0; i < amount; i++) {
             int x = random.nextInt(size);
             int y = random.nextInt(size);
-            map[x][y] = types[0];
+            map[x][y] = types[random.nextInt(2)];
         }
     }
 

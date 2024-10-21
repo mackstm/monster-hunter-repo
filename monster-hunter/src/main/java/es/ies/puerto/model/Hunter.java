@@ -87,7 +87,7 @@ public class Hunter extends Thread{
             Random random = new Random();
             int randomTime = random.nextInt(1500) + 501;
             movement = gameMap.moveHunter(this);
-            while (movement == 1) {
+            if (movement == 1) {
                 System.out.println(hunterName + " has failed a hunt");
             }
 
