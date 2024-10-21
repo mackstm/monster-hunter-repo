@@ -19,7 +19,9 @@ public class GameMap {
 
     private List<Hunter> hunters;
     private List<Monster> monsters;
+    private int successChance;
     public static final long TIME_REMAINING = 15000;
+    
 
     /**
      * Default constructor
@@ -30,6 +32,7 @@ public class GameMap {
         this.map = new String[size][size];
         this.hunters = new CopyOnWriteArrayList<>();
         this.monsters = new CopyOnWriteArrayList<>();
+        this.successChance = 7;
         generateMap();
     }
 
@@ -43,6 +46,7 @@ public class GameMap {
         this.map = new String[size][size];
         this.hunters = new CopyOnWriteArrayList<>();
         this.monsters = new CopyOnWriteArrayList<>();
+        this.successChance = 7;
         generateMap();
     }
 
@@ -110,6 +114,16 @@ public class GameMap {
         }
     }
 
+    public void generateEvents(int amount) {
+        String types[] = {"T", "S"};
+        Random random = new Random();
+        for (int i = 0; i < amount; i++) {
+            int x = random.nextInt(size);
+            int y = random.nextInt(size);
+            map[x][y] = types[random.nextInt(2)];
+        }
+    }
+
     public void showMap(){
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
@@ -156,7 +170,7 @@ public class GameMap {
             }
         
             case "M" -> {
-                if (hunted <= 7) {
+                if (hunted <= this.successChance) {
                     huntMonster(hunter);
                     map[x][y] = "H";
                     map[Integer.parseInt(position[0])][Integer.parseInt(position[1])] = "*";
@@ -168,6 +182,14 @@ public class GameMap {
             }
             
             case "H" -> moveHunter(hunter);
+
+            case "T" -> {
+                
+            }
+
+            case "S" -> {
+                successChance++;
+            }
         }
         return true;
     }
