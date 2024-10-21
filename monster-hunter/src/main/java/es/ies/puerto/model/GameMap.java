@@ -19,6 +19,7 @@ public class GameMap {
 
     private List<Hunter> hunters;
     private List<Monster> monsters;
+    public static final long TIME_REMAINING = 15000;
 
     /**
      * Default constructor
@@ -109,6 +110,17 @@ public class GameMap {
         }
     }
 
+    public void showMap(){
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < size; j++) {
+                System.out.print(map[i][j]);
+                System.out.print(" ");
+            }
+            System.out.println();
+        }
+        System.out.println();
+    }
+
     public synchronized void addHunter(Hunter hunter) {
         String area = hunter.getPosition();
         if(overlap(area)) {
@@ -145,7 +157,7 @@ public class GameMap {
         
             case "M" -> {
                 if (hunted <= 7) {
-                    huntMonster(monsters, hunter);
+                    huntMonster(hunter);
                     map[x][y] = "H";
                     map[Integer.parseInt(position[0])][Integer.parseInt(position[1])] = "*";
                     hunter.setPosition(x + ","+ y);
@@ -170,24 +182,49 @@ public class GameMap {
 
             map[row][col] = "M";
 
-            areas.put(String.valueOf(monster.getId()) + ": " + monster.getMonsterName(), area);
+            areas.put(String.valueOf(monster.getIdMonster()) + ": " + monster.getMonsterName(), area);
         }
     }
 
     public synchronized void removeMonster(Monster monster) {
-        areas.remove(String.valueOf(monster.getId()) + ": " + monster.getMonsterName());
+        areas.remove(String.valueOf(monster.getIdMonster()) + ": " + monster.getMonsterName());
         monsters.remove(monster);
     }
 
-    public synchronized void huntMonster(List<Monster> monsters, Hunter hunter) {
+    public synchronized boolean moveMonster(Monster monster) {
+        Random random = new Random();
+        int x = random.nextInt(size);
+        int y = random.nextInt(size);
+
+        String[] position = monster.getPosition().split(",");
+        switch (map[x][y]) {
+            case "*" -> {
+                map[x][y] = "M";
+                map[Integer.parseInt(position[0])][Integer.parseInt(position[1])] = "*";
+                monster.setPosition(x + "," + y);
+                return true;
+            }
+        
+            case "M" -> moveMonster(monster);
+            
+            case "H" -> {
+                moveMonster(monster);
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public synchronized boolean huntMonster(Hunter hunter) {
         for (Monster monster : monsters) {
             if (hunter.getPosition().equals(monster.getPosition())) {
                 monster.setHunted(true);
                 removeMonster(monster);
                 monsters.remove(monster);
-                return;
+                return true;
             }
         }
+        return false;
     }
 
 }

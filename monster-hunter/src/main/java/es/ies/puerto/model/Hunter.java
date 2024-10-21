@@ -13,7 +13,6 @@ public class Hunter extends Thread{
     private String hunterName;
     private String position;
     private GameMap gameMap;
-    private static final long TIME_REMAINING = 15000;
     
     /**
      * Default constructor
@@ -82,8 +81,8 @@ public class Hunter extends Thread{
 
         gameMap.addHunter(this);
 
-        while (!isOver && !gameMap.getMonsters().isEmpty() && timePassed < TIME_REMAINING) {
-            showMap();
+        while (!isOver && !gameMap.getMonsters().isEmpty() && timePassed < GameMap.TIME_REMAINING) {
+            gameMap.showMap();
             Random random = new Random();
             int randomTime = random.nextInt(1000) + 1;
             while (!gameMap.moveHunter(this)) {
@@ -114,20 +113,9 @@ public class Hunter extends Thread{
                 System.out.println(hunterName + " interrupted");
             }
         }
-        if (timePassed >= TIME_REMAINING || gameMap.getMonsters().isEmpty()){
+        if (timePassed >= GameMap.TIME_REMAINING || gameMap.getMonsters().isEmpty()){
             System.out.println(hunterName + " caught " + monsterCaught + " monsters");
         }
-    }
-
-    public void showMap(){
-        for (int i = 0; i < this.gameMap.getSize(); i++) {
-            for (int j = 0; j < this.gameMap.getSize(); j++) {
-                System.out.print(this.gameMap.getMap()[i][j]);
-                System.out.print(" ");
-            }
-            System.out.println();
-        }
-        System.out.println();
     }
 
     @Override

@@ -1,18 +1,21 @@
 package es.ies.puerto.model;
 
+import java.util.Random;
+
 /**
  * Class that represents monster
  * @author Jose Maximiliano Boada Martin <maxibapl@gmail.com>
  */
-public class Monster {
+public class Monster extends Thread {
 
     /**
      * Properties
      */
-    private int id;
+    private int idMonster;
     private String monsterName;
     private String position;
     private boolean hunted;
+    GameMap gameMap;
 
     /**
      * Default constructor
@@ -20,29 +23,31 @@ public class Monster {
     public Monster() {
         position = "";
         hunted = false;
+        gameMap = new GameMap();
     }
 
     /**
      * Constructor with id and name
-     * @param id
+     * @param idMonster
      * @param monsterName
      */
-    public Monster(int id, String monsterName) {
-        this.id = id;
+    public Monster(int idMonster, String monsterName, GameMap gameMap) {
+        this.idMonster = idMonster;
         this.monsterName = monsterName;
         position = "";
         hunted = false;
+        this.gameMap = gameMap;
     }
 
     /**
      * Getters and setters
      */
-    public int getId() {
-        return id;
+    public int getIdMonster() {
+        return idMonster;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setIdMonster(int id) {
+        this.idMonster = id;
     }
 
     public String getMonsterName() {
@@ -70,8 +75,41 @@ public class Monster {
     }
 
     @Override
+    public void run() {
+
+        gameMap.addMonster(this);
+
+        while (!hunted) {
+            Random random = new Random();
+            int randomTime = random.nextInt(1000) + 1;
+            boolean result = false;
+            for (Hunter hunter : gameMap.getHunters()) {
+                if (hunter.getPosition().equals(this.getPosition())) {
+                    result = gameMap.huntMonster(hunter);
+                }
+            }
+
+            if (result) {
+                hunted = true;
+            }
+
+            if (!hunted) {
+                gameMap.moveMonster(this);
+            } else {
+                break;
+            }            
+
+            try {
+                Thread.sleep(randomTime);
+            } catch (InterruptedException e) {
+                System.out.println(monsterName + " interrupted");
+            }
+        }
+    }
+
+    @Override
     public String toString() {
-        return "Monster [id=" + id + ", monsterName=" + monsterName + ", position=" + position + ", captured="
+        return "Monster [id=" + idMonster + ", monsterName=" + monsterName + ", position=" + position + ", captured="
                 + hunted + "]";
     }
 
@@ -79,7 +117,7 @@ public class Monster {
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + id;
+        result = prime * result + idMonster;
         return result;
     }
 
@@ -92,7 +130,7 @@ public class Monster {
         if (getClass() != obj.getClass())
             return false;
         Monster other = (Monster) obj;
-        if (id != other.id)
+        if (idMonster != other.idMonster)
             return false;
         return true;
     }

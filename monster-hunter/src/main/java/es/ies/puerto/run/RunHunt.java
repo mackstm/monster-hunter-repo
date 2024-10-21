@@ -50,15 +50,13 @@ public class RunHunt {
 
 
     public static void main(String[] args) {
-        Monster monster1 = new Monster(1, "Rathalos");
-        Monster monster2 = new Monster(2, "Rathian");
+        
 
         GameMap gameMap = new GameMap(5);
         Hunter hunter1 = new Hunter("Max", gameMap);
         Hunter hunter2 = new Hunter("Pepe", gameMap);
-
-        hunter1.setGameMap(gameMap);
-        hunter2.setGameMap(gameMap);
+        Monster monster1 = new Monster(1, "Rathalos", gameMap);
+        Monster monster2 = new Monster(2, "Rathian", gameMap);
 
         List<Monster> monsterList = new ArrayList<>(Arrays.asList(monster1, monster2));
         List<Hunter> hunterList = new ArrayList<>(Arrays.asList(hunter1, hunter2));
@@ -80,10 +78,25 @@ public class RunHunt {
         Thread hunter1Thread = new Thread(hunter1);
         Thread hunter2Thread = new Thread(hunter2);
 
+        Thread monster1Thread = new Thread(monster1);
+        Thread monster2Thread = new Thread(monster2);
+
         hunter1Thread.start();
         hunter2Thread.start();
 
+        monster1Thread.start();
+        monster2Thread.start();
 
+        try {
+            hunter1Thread.join();
+            hunter2Thread.join();
+
+            monster1Thread.join();
+            monster2Thread.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        
     }
 
     public static void createLocations(RunHunt monsterHunter) {
