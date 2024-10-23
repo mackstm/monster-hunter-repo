@@ -20,6 +20,7 @@ public class GameMap {
     private List<Hunter> hunters;
     private List<Monster> monsters;
     private int successChance;
+    private Cave cave;
     public static final long TIME_REMAINING = 15000;
     
 
@@ -33,6 +34,7 @@ public class GameMap {
         this.hunters = new CopyOnWriteArrayList<>();
         this.monsters = new CopyOnWriteArrayList<>();
         this.successChance = 7;
+        cave = new Cave();
         generateMap();
     }
 
@@ -47,6 +49,7 @@ public class GameMap {
         this.hunters = new CopyOnWriteArrayList<>();
         this.monsters = new CopyOnWriteArrayList<>();
         this.successChance = 7;
+        cave = new Cave();
         generateMap();
     }
 
@@ -94,7 +97,13 @@ public class GameMap {
         this.monsters = monsters;
     }
 
-
+    public Cave getCave() {
+        return cave;
+    }
+    
+    public void setCave(Cave cave) {
+        this.cave = cave;
+    }
 
     public String generateLocations() {
         Random random = new Random();
@@ -114,7 +123,7 @@ public class GameMap {
         }
     }
 
-    public void generateEvents(int amount) {
+    public synchronized void generateEvents(int amount) {
         String types[] = {"T", "S"};
         Random random = new Random();
         for (int i = 0; i < amount; i++) {
@@ -122,6 +131,13 @@ public class GameMap {
             int y = random.nextInt(size);
             map[x][y] = types[random.nextInt(2)];
         }
+    }
+
+    public synchronized void generateCave() {
+        String position = generateLocations();
+        String[] area = position.split(",");
+        map[Integer.parseInt(area[0])][Integer.parseInt(area[1])] = "C";
+        areas.put("Cave", position);
     }
 
     public void showMap(){
@@ -191,6 +207,10 @@ public class GameMap {
             case "S" -> {
                 successChance++;
             }
+
+            default -> {
+                moveHunter(hunter);
+            }
         }
         return 0;
     }
@@ -258,4 +278,20 @@ public class GameMap {
         return false;
     }
 
+    public synchronized void addMonsterToCave(Monster monster) {
+        cave.getMonsters().add(monster);
+    }
+
+    
+    /**
+     * Function to remove a monster to the caves list
+     */
+
+    public synchronized void removeMonsterFromCave(Monster monster) {
+        cave.getMonsters().remove(monster);
+    }
+
+    public boolean isInCave(Monster monster) {
+        return cave.getMonsters().contains(monster);
+    }
 }

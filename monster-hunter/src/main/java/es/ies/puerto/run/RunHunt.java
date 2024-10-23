@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import es.ies.puerto.model.Cave;
 import es.ies.puerto.model.GameMap;
 import es.ies.puerto.model.Hunter;
 import es.ies.puerto.model.Monster;
@@ -52,14 +53,28 @@ public class RunHunt {
     public static void main(String[] args) {
         
 
+        int monsterAmount = 3;
+        int caveCapacity = 2;
+
+        
+
         GameMap gameMap = new GameMap(5);
         Hunter hunter1 = new Hunter("Max", gameMap);
         Hunter hunter2 = new Hunter("Pedro", gameMap);
         Monster monster1 = new Monster(1, "Rathalos", gameMap);
         Monster monster2 = new Monster(2, "Rathian", gameMap);
+        Monster monster3 = new Monster(3, "Gore Magala", gameMap);
 
-        List<Monster> monsterList = new ArrayList<>(Arrays.asList(monster1, monster2));
+        Cave cave = new Cave(caveCapacity, gameMap.generateLocations());
+
+        List<Monster> monsterList = new ArrayList<>(Arrays.asList(monster1, monster2, monster3));
         List<Hunter> hunterList = new ArrayList<>(Arrays.asList(hunter1, hunter2));
+
+        monster1.setCave(cave);
+        monster2.setCave(cave);
+        monster3.setCave(cave);
+
+        gameMap.setCave(cave);
 
         RunHunt monsterHunterGame = new RunHunt();
         monsterHunterGame.setGameMap(gameMap);
@@ -82,12 +97,14 @@ public class RunHunt {
 
         Thread monster1Thread = new Thread(monster1);
         Thread monster2Thread = new Thread(monster2);
+        Thread monster3Thread = new Thread(monster3);
 
         hunter1Thread.start();
         hunter2Thread.start();
 
         monster1Thread.start();
         monster2Thread.start();
+        monster3Thread.start();
 
         // try {
         //     hunter1Thread.join();

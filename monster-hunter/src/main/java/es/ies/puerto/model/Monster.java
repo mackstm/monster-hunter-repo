@@ -16,6 +16,7 @@ public class Monster extends Thread {
     private String position;
     private boolean hunted;
     GameMap gameMap;
+    private Cave cave;
 
     /**
      * Default constructor
@@ -24,6 +25,7 @@ public class Monster extends Thread {
         position = "";
         hunted = false;
         gameMap = new GameMap();
+        cave = new Cave();
     }
 
     /**
@@ -37,6 +39,7 @@ public class Monster extends Thread {
         position = "";
         hunted = false;
         this.gameMap = gameMap;
+        cave = new Cave();
     }
 
     /**
@@ -74,6 +77,18 @@ public class Monster extends Thread {
         this.hunted = captured;
     }
 
+    public GameMap getGameMap() {
+        return gameMap;
+    }
+
+    public Cave getCave() {
+        return cave;
+    }
+
+    public void setCave(Cave cave) {
+        this.cave = cave;
+    }
+
     @Override
     public void run() {
         long initialTime = System.currentTimeMillis();
@@ -92,6 +107,19 @@ public class Monster extends Thread {
             if (movement == -1) {
                 System.out.println(monsterName + " died in a trap!");
                 break;
+            }
+
+            if (!cave.isOccupied()) {
+                try {
+                    cave.enterCave(this, gameMap);
+
+                    Thread.sleep(3000);
+
+                    cave.exitCave(this, gameMap);
+                } catch (InterruptedException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
             }
 
             long endTime = System.currentTimeMillis();
